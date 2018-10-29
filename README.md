@@ -1,5 +1,6 @@
 # csolb
 Magnetic flux density calculator for solenoid magnets.
+<br/>This program can run 100 million calculations of a magnetic field at arbitrary point near a single solenoid in 35 seconds. Stress tests are done with Intel(R) Core(TM) i5-8600 6-core CPU with 16 GB of memory. No GPU is used in the calculation.
 
 ### Necessary Libraries
 - Intel MKL Library (https://software.intel.com/en-us/mkl)

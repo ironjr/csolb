@@ -14,8 +14,8 @@ Make sure above necessary libraries are installed in your machine. In GNU progra
 
 ### Credit
 Programmed by Jaerin Lee <jarin.lee@gmail.com>
-Department of Electrical and Computer Engineering
-Seoul National University
+<br/>Department of Electrical and Computer Engineering
+<br/>Seoul National University
 
 Implementation of core calculation method in the form of matlab code was contributed by Seungyong Hahn, Seoul National University. This work is a redesign of the original code in a more parallel-friendly form, with adding necessary interfaces for ease of use.
 

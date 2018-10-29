@@ -24,5 +24,5 @@ solb.o: core/solb.cpp
 
 stress-test-main.o: stress-test/stress-test-main.cpp
 	(cd stress-test; \
-		$(CPP) -Wall -I$(INC) -c stress-test-main.cpp)
+		$(CPP) -Wall -fopenmp -I$(INC) -c stress-test-main.cpp)
 

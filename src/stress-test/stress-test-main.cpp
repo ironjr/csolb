@@ -1,6 +1,7 @@
 #include "../core/solb.h"
+#include "omp.h"
 
-#define STRESS_TEST_NUM 1000000
+#define STRESS_TEST_NUM 100000000
 
 void testSimple0();
 void testStress0(int num);
@@ -32,10 +33,13 @@ void testStress0(int num)
 	time(&begin);
 	timeinfo = localtime(&begin);
 	printf("Test began at %s\n", asctime(timeinfo));
-	for (int i = 0; i < num; ++i)
-	{
-		testSimple0();
-	}
+
+#pragma omp parallel for
+    for (int i = 0; i < num; ++i)
+    {
+        testSimple0();
+    }
+
 	time(&end);
 	timeinfo = localtime(&end);
 	printf("Test ended at %s\n", asctime(timeinfo));

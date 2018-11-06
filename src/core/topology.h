@@ -33,6 +33,29 @@ typedef struct _top_solenoid_t
 		this->b2 = b2;
 		this->j = j;
 	}
+    
+    _top_solenoid_t(const struct _top_solenoid_t *sol)
+    {
+        if (sol == NULL)
+        {
+            _top_solenoid_t();
+            return;
+        }
+        this->a1 = sol->a1;
+        this->a2 = sol->a2;
+		this->b1 = sol->b1;
+		this->b2 = sol->b2;
+		this->j = sol->j;
+	}
+
+    _top_solenoid_t()
+    {
+		this->a1 = 0;
+		this->a2 = 0;
+		this->b1 = 0;
+		this->b2 = 0;
+		this->j = 0;
+    }
 
 	void print()
 	{

@@ -1,5 +1,5 @@
 /**
- * magneticity.h
+ * physics.h
  *
  * Defines data structures and rules defining physics.
  *
@@ -11,10 +11,34 @@
  * Seoul National University
  */
 
-#ifndef __MAGNETICITY_H__
-#define __MAGNETICITY_H__
+#ifndef __PHYSICS_H__
+#define __PHYSICS_H__
 
 #include <stdio.h>
+
+typedef struct _vec2d_t
+{
+    double r;
+    double z;
+
+	_vec2d_t()
+	{
+		r = 0.0;
+		z = 0.0;
+	}
+
+	_vec2d_t(double r, double z)
+	{
+		this->r = r;
+		this->z = z;
+	}
+
+    _vec2d_t(const struct _vec2d_t *vec)
+    {
+        this->r = vec->r;
+        this->z = vec->z;
+    }
+} vec2d_t;
 
 typedef struct _mag_field_2d_t
 {
@@ -32,6 +56,12 @@ typedef struct _mag_field_2d_t
 		this->Br = Br;
 		this->Bz = Bz;
 	}
+
+    _mag_field_2d_t(const struct _mag_field_2d_t *mag)
+    {
+        this->Br = mag->Br;
+        this->Bz = mag->Bz;
+    }
 
 	void print()
 	{

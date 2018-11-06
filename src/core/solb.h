@@ -26,7 +26,7 @@
 
 #include "mkl.h"
 
-#include "magneticity.h"
+#include "physics.h"
 #include "topology.h"
 #include "gauss-quad.h"
 
@@ -35,6 +35,6 @@ extern const double x[];
 extern const double w[];
 
 /* Public interfaces. */
-mag_field_2d_t *solBSingle(const top_solenoid_t *sol, double r, double z);
+mag_field_2d_t solb_single(const top_solenoid_t *sol, double r, double z);
 
 #endif

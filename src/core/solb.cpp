@@ -19,15 +19,21 @@
 #define ERROR_REF 1e-10
 
 /* Function premitives. */
-mag_field_2d_t *solBInternal(const top_solenoid_t *sol, double r, double z);
+mag_field_2d_t solb_internal(const top_solenoid_t *sol, double r, double z);
 
-mag_field_2d_t *solBSingle(const top_solenoid_t *sol, double r, double z)
+mag_field_2d_t
+solb_single(const top_solenoid_t *sol, double r, double z)
 {
+    static const char *label = "solb_single";
+
 	/* Handle bad inputs. */
 	if (sol == NULL)
 	{
-		fprintf(stderr, "No solenoid has been specified.");
-		return new mag_field_2d_t();
+		fprintf(stderr, "%s: No solenoid has been specified.", label);
+
+        mag_field_2d_t B{0, 0};
+
+		return B;
 	}
 
 	/* Caching dimensions of the solenoid. */
@@ -38,42 +44,42 @@ mag_field_2d_t *solBSingle(const top_solenoid_t *sol, double r, double z)
 	/* Handling bad solenoid dimensions. */
 	if (a2 < a1 || sol->b2 < sol->b1)
 	{
-		fprintf(stderr, "Wrong solenoid dimension.");
-		return new mag_field_2d_t();
+		fprintf(stderr, "%s: Wrong solenoid dimension.", label);
+
+        mag_field_2d_t B{0, 0};
+
+		return B;
 	}
 
 	if (r > a1 && r < a2)
 	{
-		top_solenoid_t *inner = new top_solenoid_t(*sol);
-		top_solenoid_t *outer = new top_solenoid_t(*sol);
-		inner->a2 = r;
-		outer->a1 = r;
+		top_solenoid_t inner(*sol);
+		top_solenoid_t outer(*sol);
+		inner.a2 = r;
+		outer.a1 = r;
 
-		mag_field_2d_t *resInner = solBInternal(inner, r, z);
+		mag_field_2d_t resInner = solb_internal(&inner, r, z);
 		double dtmp0 = 0.5e-7 * j * M_PI;
 		double dtmp1 = dtmp0 * (r - a1);
 		/* Note 1 */
 		double dtmp2 = (r / a1 < NEAR_CENTER_THRESHOLD) ? 0 : 0.5 / r;
-		double Br = resInner->Br * dtmp1 * dtmp2;
-		double Bz = resInner->Bz * dtmp1;
+		double Br = resInner.Br * dtmp1 * dtmp2;
+		double Bz = resInner.Bz * dtmp1;
 
-		mag_field_2d_t *resOuter = solBInternal(outer, r, z);
+		mag_field_2d_t resOuter = solb_internal(&outer, r, z);
 		dtmp1 = dtmp0 * (a2 - r);
-		Br += resOuter->Br * dtmp1 * dtmp2;
-		Bz += resOuter->Bz * dtmp1;
+		Br += resOuter.Br * dtmp1 * dtmp2;
+		Bz += resOuter.Bz * dtmp1;
 
-		delete resInner;
-		delete resOuter;
-		delete inner;
-		delete outer;
+        mag_field_2d_t B{Br, Bz};
 
-		return new mag_field_2d_t(Br, Bz);
+		return B;
 	}
 	else
 	{
-		mag_field_2d_t *res = solBInternal(sol, r, z);
-		double Br = res->Br;
-		double Bz = res->Bz;
+		mag_field_2d_t res = solb_internal(sol, r, z);
+		double Br = res.Br;
+		double Bz = res.Bz;
 		double dtmp = 0.5e-7 * j * (a2 - a1) * M_PI;
 
 		/* Note 1: Exception for near-center field. Field calculation in this way
@@ -84,13 +90,14 @@ mag_field_2d_t *solBSingle(const top_solenoid_t *sol, double r, double z)
 			Br *= 0.5 * dtmp / r;
 		Bz *= dtmp;
 
-		delete res;
+        mag_field_2d_t B{Br, Bz};
 
-		return new mag_field_2d_t(Br, Bz);
+		return B;
 	}
 }
 
-mag_field_2d_t *solBInternal(const top_solenoid_t *sol, double r, double z)
+mag_field_2d_t
+solb_internal(const top_solenoid_t *sol, double r, double z)
 {
 	/* Caching dimensions of the solenoid. */
 	double a1 = sol->a1;
@@ -322,6 +329,8 @@ mag_field_2d_t *solBInternal(const top_solenoid_t *sol, double r, double z)
 	vdDiv(QUAD_ORDER, datmp1, datmp0, datmp2);
 	BzDiff -= cblas_ddot(QUAD_ORDER, w, 1, datmp2, 1) * (z - h); // DIFF
 
-	mag_field_2d_t *ans = new mag_field_2d_t(BrDiff, BzDiff);
-	return ans;
+	mag_field_2d_t ans;
+    ans.Br = BrDiff;
+    ans.Bz = BzDiff;
+    return ans;
 }

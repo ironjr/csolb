@@ -16,9 +16,9 @@ void testSimple0()
 {
 	top_solenoid_t *sol = new top_solenoid_t(.5, .5142, -.21, .21, 4.7619e8);
 	//sol->print();
-	mag_field_2d_t *field = solBSingle(sol, 0, 0);
+	mag_field_2d_t field = solb_single(sol, 0, 0);
 	//field->print();
-	delete field;
+	//delete field;
 	delete sol;
 }
 
